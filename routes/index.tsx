@@ -1,21 +1,37 @@
 import { Head } from "$fresh/runtime.ts";
 import { Handlers } from "$fresh/server.ts";
+import { getDocumentById, saveDocument } from "../utils/db.ts";
 
 export const handler: Handlers = {
-  async GET(_, ctx) {
-    return ctx.render()
+  GET(_, ctx) {
+    return ctx.render();
   },
   async POST(req) {
     const form = await req.formData();
-    console.log(form.get("title"), form.get("content"))
+    const title = form.get("title");
+    const content = form.get("content");
+    if (
+      typeof title !== "string" || title.length === 0
+    ) {
+      return new Response("Invalid title", { status: 400 });
+    }
+
+    if (
+      typeof content !== "string" || content.length === 0
+    ) {
+      return new Response("Invalid content", { status: 400 });
+    }
+
+    const id = await saveDocument(title, content);
+
     return new Response("", {
       status: 302,
       headers: {
-        Location: "/",
-      }
-    })
-  }
-}
+        Location: `/${id}`,
+      },
+    });
+  },
+};
 
 export default function Home() {
   return (
