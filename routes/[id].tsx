@@ -16,7 +16,6 @@ export const handler: Handlers = {
 }
 
 export default function Home(props: PageProps<Document>) {
-  const isMarkdown = props.data.title.endsWith(" (md)")
   return (
     <>
       <Head>
@@ -34,17 +33,11 @@ export default function Home(props: PageProps<Document>) {
             {new Date(props.data.timestamp).toLocaleString()}
           </time>
         </header>
-        {isMarkdown ? (
-          <div class="prose prose-slate max-w-3xl"
-            dangerouslySetInnerHTML={{
-              __html: render(props.data.content)
-            }}>
-          </div>
-        ): (
-          <div>
-            {props.data.content}
-          </div>
-        )}
+        <div class="prose prose-slate max-w-3xl"
+          dangerouslySetInnerHTML={{
+            __html: render(props.data.content)
+          }}>
+        </div>
       </div>
     </>
   )
