@@ -1,6 +1,6 @@
 import { Head } from "$fresh/runtime.ts";
 import { Handlers } from "$fresh/server.ts";
-import { getDocumentById, saveDocument } from "../utils/db.ts";
+import { saveDocument } from "../lib/db.ts";
 
 export const handler: Handlers = {
   GET(_, ctx) {
