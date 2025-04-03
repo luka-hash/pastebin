@@ -18,6 +18,7 @@ export async function saveDocument(
 }
 
 export async function getDocumentById(id: string): Promise<Document | null> {
+  console.log(id);
   const document = await kv.get<Document>(["documents", id]);
   return document.value;
 }
