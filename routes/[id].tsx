@@ -1,19 +1,19 @@
 import { Head } from "$fresh/runtime.ts";
-import { Handlers } from "$fresh/server.ts"
-import { getDocumentById, Document } from "../lib/db.ts";
-import {CSS as gfmCSS, render} from "@deno/gfm";
+import { Handlers } from "$fresh/server.ts";
+import { Document, getDocumentById } from "../lib/db.ts";
+import { render } from "@deno/gfm";
 
 export const handler: Handlers = {
-  async GET(_, ctx){
+  async GET(_, ctx) {
     const id = ctx.params.id;
     const document = await getDocumentById(id);
     if (document === null) {
       return ctx.renderNotFound();
     }
 
-    return ctx.render(document)
-  }
-}
+    return ctx.render(document);
+  },
+};
 
 export default function Home(props: PageProps<Document>) {
   return (
@@ -28,17 +28,19 @@ export default function Home(props: PageProps<Document>) {
           </h1>
           <time
             class="text-sm text-gray-500"
-            datetime={props.data.timestamp}
+            datetime={props.data.timestamp.toString()}
           >
             {new Date(props.data.timestamp).toLocaleString()}
           </time>
         </header>
-        <div class="prose prose-slate max-w-3xl"
+        <div
+          class="prose prose-slate max-w-3xl"
           dangerouslySetInnerHTML={{
-            __html: render(props.data.content)
-          }}>
+            __html: render(props.data.content),
+          }}
+        >
         </div>
       </div>
     </>
-  )
+  );
 }
