@@ -5,8 +5,8 @@ Pastebin service written in Deno using the Fresh framework.
 ## Todo
 
 - [ ] Make pretty
-- [ ] Add explore page
--
+- [x] Add explore page
+- [ ] Add tests
 
 ## Licence
 
