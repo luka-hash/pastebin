@@ -22,6 +22,11 @@ export default function Home(props: PageProps<Document>) {
         <title>Paste: {props.data.title}</title>
       </Head>
       <div class="p-8 ml-20">
+        <h1>
+          <a href="/">
+            Pastebin
+          </a>
+        </h1>
         <header class="mb-6">
           <h1 class="text-3xl font-bold text-gray-900 mb-2">
             {props.data.title}
