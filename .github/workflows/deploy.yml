@@ -32,5 +32,3 @@ jobs:
           project: "e69a756-pastebin"
           entrypoint: "main.ts"
           root: "."
-          
-          
