@@ -3,6 +3,7 @@ import { nanoid } from "@sitnik/nanoid";
 const kv = await Deno.openKv();
 
 export interface Document {
+  id: string;
   title: string;
   content: string;
   timestamp: number;
@@ -13,12 +14,24 @@ export async function saveDocument(
   content: string,
 ): Promise<string> {
   const id = nanoid();
-  await kv.set(["documents", id], { title: title, content: content, timestamp: Date.now() });
+  const document: Document = {
+    id: id,
+    title: title,
+    content: content,
+    timestamp: Date.now(),
+  };
+  await kv.set(["documents", id], document);
+  const recent = (await kv.get<Document[]>(["recent_documents"])).value || [];
+  await kv.atomic().set(["recent_documents"], [document, ...recent].slice(0,20)).commit();
   return id;
 }
 
 export async function getDocumentById(id: string): Promise<Document | null> {
-  console.log(id);
   const document = await kv.get<Document>(["documents", id]);
   return document.value;
+}
+
+export async function getRecentDocuments(): Promise<Document[]> {
+  const documents = (await kv.get<Document[]>(["recent_documents"])).value || [];
+  return documents;
 }
