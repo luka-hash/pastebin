@@ -21,8 +21,12 @@ export async function saveDocument(
     timestamp: Date.now(),
   };
   await kv.set(["documents", id], document);
-  const recent = (await kv.get<Document[]>(["recent_documents"])).value || [];
-  await kv.atomic().set(["recent_documents"], [document, ...recent].slice(0,20)).commit();
+  const recent = await kv.get<Document[]>(["recent_documents"]);
+  const recentDocuments = recent.value || [];
+  await kv.atomic()
+	.check(recent)
+	.set(["recent_documents"], [document, ...recentDocuments].slice(0,20))
+	.commit();
   return id;
 }
 
