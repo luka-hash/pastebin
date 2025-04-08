@@ -9,6 +9,12 @@ export interface Document {
   timestamp: number;
 }
 
+export interface Session {
+  id: string;
+  username: string;
+  cookie: string;
+}
+
 export async function saveDocument(
   title: string,
   content: string,
@@ -24,9 +30,9 @@ export async function saveDocument(
   const recent = await kv.get<Document[]>(["recent_documents"]);
   const recentDocuments = recent.value || [];
   await kv.atomic()
-	.check(recent)
-	.set(["recent_documents"], [document, ...recentDocuments].slice(0,20))
-	.commit();
+    .check(recent)
+    .set(["recent_documents"], [document, ...recentDocuments].slice(0, 20))
+    .commit();
   return id;
 }
 
@@ -36,6 +42,23 @@ export async function getDocumentById(id: string): Promise<Document | null> {
 }
 
 export async function getRecentDocuments(): Promise<Document[]> {
-  const documents = (await kv.get<Document[]>(["recent_documents"])).value || [];
+  const documents = (await kv.get<Document[]>(["recent_documents"])).value ||
+    [];
   return documents;
+}
+
+export async function saveSession(username: string) {
+  const id = nanoid();
+  const token = crypto.randomUUID();
+  const session: Session = {
+    id: id,
+    username: username,
+    cookie: token,
+  };
+  await kv.set(["sessions", username], session);
+}
+
+export async function getSession(username: string): Promise<Session | null> {
+  const session = await kv.get<Session>(["sessions", username]);
+  return session.value;
 }
